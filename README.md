@@ -16,6 +16,6 @@ Made by following [rustwasm.com's book](https://rustwasm.github.io/docs/book). C
 
 ### Compile & run
 1. Run `wasm-pack build --target web` to compile Rust code to WASM
-2. Run `npx http-server` to start the web server
+2. Go to `./pkg` and run `npx http-server` to start the web server
 3. Open your browser and go to `localhost:8080`
 4. Have fun 👍
