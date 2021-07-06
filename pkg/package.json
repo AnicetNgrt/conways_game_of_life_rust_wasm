@@ -1,0 +1,15 @@
+{
+  "name": "cgol",
+  "collaborators": [
+    "Anicet Nougaret"
+  ],
+  "version": "0.1.0",
+  "files": [
+    "cgol_bg.wasm",
+    "cgol.js",
+    "cgol.d.ts"
+  ],
+  "module": "cgol.js",
+  "types": "cgol.d.ts",
+  "sideEffects": false
+}

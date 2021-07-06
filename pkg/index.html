@@ -1,0 +1,51 @@
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
+    <style>
+      body {
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: black;
+      }
+
+      #game-of-life-canvas {
+        margin-top: 2rem;
+        font-family: monospace;
+        font-size: 0.4rem;
+        padding: 1rem;
+        background-color: black;
+        color: rgb(32, 100, 77);
+        border: solid 1px rgb(32, 100, 77);
+        box-shadow: 3px 3px 0px rgb(32, 100, 77);
+      }
+    </style>
+  </head>
+  <body>
+    <pre id="game-of-life-canvas"></pre>
+    <script type="module">
+
+      import init, { Universe } from './cgol.js';
+
+      async function run() {
+        await init();
+
+        const pre = document.getElementById("game-of-life-canvas");
+        const universe = Universe.new(100, 100);
+
+        const renderLoop = () => {
+          pre.textContent = universe.render();
+          universe.tick();
+
+          requestAnimationFrame(renderLoop);
+        };
+
+        requestAnimationFrame(renderLoop);
+      }
+
+      run();
+    </script>
+  </body>
+</html>
