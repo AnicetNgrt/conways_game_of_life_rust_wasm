@@ -1,6 +1,7 @@
 mod utils;
 
-use utils::set_panic_hook;
+use fixedbitset::FixedBitSet;
+use utils::{set_panic_hook, rand_wasm};
 use wasm_bindgen::prelude::*;
 use std::fmt;
 
@@ -22,7 +23,7 @@ pub enum Cell {
 pub struct Universe {
     width: u32,
     height: u32,
-    cells: Vec<Cell>,
+    cells: FixedBitSet,
 }
 
 impl Universe {
@@ -52,15 +53,12 @@ impl Universe {
     pub fn new(width: u32, height: u32) -> Universe {
         set_panic_hook();
 
-        let cells = (0..width * height)
-            .map(|i| {
-                if i % 2 == 0 || i % 7 == 0 {
-                    Cell::Alive
-                } else {
-                    Cell::Dead
-                }
-            })
-            .collect();
+        let size = (width * height) as usize;
+        let mut cells = FixedBitSet::with_capacity(size);
+
+        for i in 0..size {
+            cells.set(i, rand_wasm() < 0.5);
+        }
         
         Universe {
             width,
@@ -79,14 +77,14 @@ impl Universe {
                 let live_neighbors = self.live_neighbor_count(row, col);
 
                 let next_cell = match (cell, live_neighbors) {
-                    (Cell::Alive, x) if x < 2 => Cell::Dead,
-                    (Cell::Alive, 2) | (Cell::Alive, 3) => Cell::Alive,
-                    (Cell::Alive, x) if x > 3 => Cell::Dead,
-                    (Cell::Dead, 3) => Cell::Alive,
+                    (true, x) if x < 2 => false,
+                    (true, 2) | (true, 3) => true,
+                    (true, x) if x > 3 => false,
+                    (false, 3) => true,
                     (otherwise, _) => otherwise
                 };
 
-                next[idx] = next_cell;
+                next.set(idx, next_cell);
             }
         }
 
@@ -100,9 +98,10 @@ impl Universe {
 
 impl fmt::Display for Universe {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        for line in self.cells.as_slice().chunks(self.width as usize) {
-            for &cell in line {
-                let symbol = if cell == Cell::Dead { ' ' } else { '%' };
+        for row in 0..self.height {
+            for col in 0..self.width {
+                let cell = self.cells[self.get_index(row, col)];
+                let symbol = if cell { '%' } else { ' ' };
                 write!(f, "{}{}", symbol, symbol)?;
             }
             write!(f, "\n")?;

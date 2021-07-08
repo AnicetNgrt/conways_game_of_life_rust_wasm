@@ -14,7 +14,7 @@
       #game-of-life-canvas {
         margin-top: 2rem;
         font-family: monospace;
-        font-size: 0.4rem;
+        font-size: 0.1rem;
         padding: 1rem;
         background-color: black;
         color: rgb(32, 100, 77);
@@ -33,7 +33,7 @@
         await init();
 
         const pre = document.getElementById("game-of-life-canvas");
-        const universe = Universe.new(100, 100);
+        const universe = Universe.new(400, 400);
 
         const renderLoop = () => {
           pre.textContent = universe.render();

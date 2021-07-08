@@ -8,3 +8,10 @@ pub fn set_panic_hook() {
     #[cfg(feature = "console_error_panic_hook")]
     console_error_panic_hook::set_once();
 }
+
+pub fn rand_wasm() -> f64 {
+    #[allow(unused_unsafe)]
+    unsafe {
+        js_sys::Math::random()
+    }
+}
